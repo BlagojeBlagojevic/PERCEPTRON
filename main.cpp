@@ -239,7 +239,7 @@ int main(void)
 			{
 				if(what==1)
 					percentage_guees+=1;
-				printf("KVADRAT (RECTANGLE)"\n\n");	
+				printf("KVADRAT (RECTANGLE)\n\n");	
 			}
 		else
 			{
