@@ -239,14 +239,14 @@ int main(void)
 			{
 				if(what==1)
 					percentage_guees+=1;
-				printf("KVADRAT\n\n");	
+				printf("KVADRAT (RECTANGLE)"\n\n");	
 			}
 		else
 			{
 				if(what==0)
 					percentage_guees+=1;
 			
-				printf("KRUG\n\n");
+				printf("KRUG (CIRCLE)\n\n");
 			
 			}
 		printf("percantage of a corect answers: %f  \n\n\n\n",(percentage_guees/float((i-training))*100));
