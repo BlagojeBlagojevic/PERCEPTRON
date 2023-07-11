@@ -12,16 +12,28 @@ void random_weights()
 	for(int i=0;i<height;i++)
 	for(int j=0;j<width;j++)
 	{
-		tezine[i][j]=rand()%10/10;
+		if(j%2==0)
+			tezine[i][j]=(-1)*rand()%10/10;
+		else
+			tezine[i][j]=(-1)*rand()%10/10;
+
+		
 	}
 }
 
 double sigmoid(double x)
 {
 	return exp(x)/(exp(x)+1);
-	//return sin(x);
+	//return fabs((exp(x)-exp(-x))/(exp(x)+exp(-x)));
 }
-
+void drawpixel(int color,int i,int j)
+{
+		
+		setcolor(color);
+		setfillstyle(SOLID_FILL,color);
+		rectangle((i)*upscale,j*upscale,(i+0)*upscale+10,(j+0)*upscale+10);
+		floodfill(i*upscale+1,j*upscale+1,color);
+}
 void draw(void)
 {
 	int i,j,k;
@@ -29,19 +41,29 @@ void draw(void)
 	{
 		for(j=0;j<width;j++)
 		{
-			if(tezine[i][j]>0)
+			if(tezine[i][j]>2)
 			{
-				setcolor(RED);
-				setfillstyle(SOLID_FILL,RED);
-				rectangle((i)*upscale,j*upscale,(i)*upscale+10,(j)*upscale+10);
-				floodfill(i*upscale+1,j*upscale+1,RED);
+				drawpixel(RED,i,j);
 			}
-				if(tezine[i][j]<=0)
+			
+			if(tezine[i][j]<=2&&tezine[i][j]>=1.5)
 			{
-				setcolor(BLUE);
-				setfillstyle(SOLID_FILL,BLUE);
-				rectangle(i*upscale,j*upscale,(0+i)*upscale+10,(0+j)*upscale+10);
-				floodfill(i*upscale+1,j*upscale+1,BLUE);
+				drawpixel(BROWN,i,j);
+			}
+			
+			if(tezine[i][j]<=1.5&&tezine[i][j]>=0)
+			{
+				drawpixel(GREEN,i,j);
+			}
+			
+			if(tezine[i][j]<0&&tezine[i][j]>=-1.5)
+			{
+				drawpixel(YELLOW,i,j);
+			}
+			
+			if(tezine[i][j]<-1.5)
+			{
+				drawpixel(BLUE,i,j);
 			}
 			
 		}
@@ -171,7 +193,7 @@ void generate(int what)
 			{
 				if(j+cord[0]>width-1||i+cord[1]>height-1)
 					break;
-					//learning_reate=sigmoid(perceptron_calc_out());
+					learning_reate=sigmoid(perceptron_calc_out());
 					tezine[i+cord[1]][j+cord[0]]=tezine[i+cord[1]][j+cord[0]]+learning_reate;
 					ulaz[i+cord[1]][j+cord[0]]=1.0;	
 	
@@ -195,7 +217,7 @@ void generate(int what)
 					break;
 				if(cord[2]*cord[2]<((i+cord[1])*(i+cord[1])+(j+cord[0])*(j+cord[0])))
 					{
-							//learning_reate=sigmoid(perceptron_calc_out());
+							learning_reate=sigmoid(perceptron_calc_out());
 							tezine[i+cord[1]][j+cord[0]]=tezine[i+cord[1]][j+cord[0]]-learning_reate;
 							ulaz[i+cord[1]][j+cord[0]]=1.0;
 					}
@@ -218,12 +240,16 @@ int main(void)
 	srand(time(NULL));
 	int window1=initwindow(width*upscale,height*upscale,"TEZINE");
 	int window2=initwindow(width*upscale,height*upscale,"OBLIK") ;
-	//random_weights();
+	random_weights();
+	
+	printf("LEGENDS:\nBLUE <-1.5\nYELLOW [-1.5,0]\nGREEN [0,1.5]\nBROWN[1.5,2]\nRED >2\n\n");
 
 	while(1)
 	{
-		//what=abs(rand()%2);
-		what=i%2;
+		if(i==100000)
+			i=0;
+		what=abs(rand()%2);
+		//what=i%2;
 		clean_input();
 		i++;
 		setcurrentwindow(window2);
@@ -233,20 +259,21 @@ int main(void)
 		draw();
 		if(i>training)
 		{
-		system("pause");
+		//system("pause");
 		out=perceptron_calc_out();
+		//out=sin(perceptron_calc_out());
 		if(out>=0&&out<=0.5)		
 			{
 				if(what==1)
 					percentage_guees+=1;
-				printf("KVADRAT (RECTANGLE)\n\n");	
+				printf("KVADRAT\n\n");	
 			}
 		else
 			{
 				if(what==0)
 					percentage_guees+=1;
 			
-				printf("KRUG (CIRCLE)\n\n");
+				printf("KRUG\n\n");
 			
 			}
 		printf("percantage of a corect answers: %f  \n\n\n\n",(percentage_guees/float((i-training))*100));
